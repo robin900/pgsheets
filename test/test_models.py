@@ -1,14 +1,8 @@
-from unittest import TestCase
-import six
-if six.PY3:
-    from unittest.mock import patch
-else:
-    from mock import patch
-
 from pgsheets import Spreadsheet
 from pgsheets.models import Worksheet
 from pgsheets.exceptions import PGSheetsHTTPException
 
+from test.compat import TestCase, patch
 from test.api_content import get_spreadsheet_element, \
     get_worksheets_feed, get_worksheet_entry
 

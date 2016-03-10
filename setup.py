@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -13,6 +14,10 @@ if __name__ == '__main__':
     # exclude pandas requirement for CI testing
     if os.environ.get('TRAVIS') or os.environ.get('CI'):
         requirements = [ r for r in requirements if not 'pandas' in r ]
+    # test_requires depending on Python version
+    tests_require = []
+    if sys.version_info[0] == 2:
+        tests_require = ['mock', 'unittest2']
     # get readme
     with open('README.rst') as f:
         readme = f.read()
@@ -34,7 +39,7 @@ if __name__ == '__main__':
           license="MIT",
           url="https://github.com/henrystokeley/pgsheets",
           install_requires=requirements,
-          tests_require=['mock'],
+          tests_require=tests_require,
           test_suite='test',
           classifiers=[
               'Development Status :: 3 - Alpha',

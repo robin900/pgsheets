@@ -1,10 +1,6 @@
-from unittest import TestCase
-import six
-if six.PY3:
-    from unittest.mock import patch
-else:
-    from mock import patch
 import datetime
+
+from test.compat import TestCase, patch
 
 from pgsheets import Client, Token
 from pgsheets.exceptions import PGSheetsHTTPException

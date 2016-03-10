@@ -18,7 +18,7 @@ class MockToken():
     def getAuthorizationHeader(self, headers=None):
         if headers is None:
             headers = {}
-        headers['Authorization'] = "Bearer {}".format(self.token)
+        headers['Authorization'] = "Bearer {token}".format(token=self.token)
         return headers
 
 
@@ -97,29 +97,29 @@ class TestSpreadSheet(ApiTest):
         key = "TESTKEY"
         test_keys = [
             key,  # just using key
-            "https://docs.google.com/spreadsheets/d/{}/edit#gid=0"
-            .format(key),  # normal url
-            "http://docs.google.com/spreadsheets/d/{}/edit#gid=0"
-            .format(key),  # not https
-            "https://docs.google.com/spreadsheets/d/{}"
-            .format(key),  # no trailing slash
-            "https://www.docs.google.com/spreadsheets/d/{}"
-            .format(key),  # includes www
-            "www.docs.google.com/spreadsheets/d/{}"
-            .format(key),  # includes www, no http
-            "docs.google.com/spreadsheets/d/{}/"
-            .format(key),  # no http
+            "https://docs.google.com/spreadsheets/d/{key}/edit#gid=0"
+            .format(key=key),  # normal url
+            "http://docs.google.com/spreadsheets/d/{key}/edit#gid=0"
+            .format(key=key),  # not https
+            "https://docs.google.com/spreadsheets/d/{key}"
+            .format(key=key),  # no trailing slash
+            "https://www.docs.google.com/spreadsheets/d/{key}"
+            .format(key=key),  # includes www
+            "www.docs.google.com/spreadsheets/d/{key}"
+            .format(key=key),  # includes www, no http
+            "docs.google.com/spreadsheets/d/{key}/"
+            .format(key=key),  # no http
             ]
 
         # check that we call the right URL
         feed_url = ("https://spreadsheets.google.com/feeds/spreadsheets/"
-                    "private/full/{}")
+                    "private/full/{key}")
 
         self.get.return_value.status_code = 200
         self.get.return_value.content = get_spreadsheet_element(key=key)
         for k in test_keys:
             s = Spreadsheet(self.token, key)
-            self.checkGetCall(url=feed_url.format(key))
+            self.checkGetCall(url=feed_url.format(key=key))
             self.assertEqual(s.getKey(), key)
 
         # a bad key gets an error
@@ -127,7 +127,7 @@ class TestSpreadSheet(ApiTest):
         bad_key = "BAD_KEY"
         with self.assertRaises(PGSheetsHTTPException):
             Spreadsheet(self.token, bad_key)
-        self.checkGetCall(url=feed_url.format(bad_key))
+        self.checkGetCall(url=feed_url.format(key=bad_key))
 
         self.assertFalse(self.post.called)
 
@@ -153,8 +153,8 @@ class TestSpreadSheet(ApiTest):
     def test_getURL(self):
         s = self.getSpreadsheet("TESTKEY", "my_title")
         self.assertEqual(s.getURL(),
-                         "https://docs.google.com/spreadsheets/d/{}/edit"
-                         .format("TESTKEY"))
+                         "https://docs.google.com/spreadsheets/d/{key}/edit"
+                         .format(key="TESTKEY"))
 
     def test_addRemoveWorksheets(self):
         key = "TESTKEY"
@@ -166,8 +166,8 @@ class TestSpreadSheet(ApiTest):
             key=key, sheet_names=["sheet_title"])
         w = s.getWorksheets()
         self.checkGetCall(
-            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full"
-            .format(key))
+            "https://spreadsheets.google.com/feeds/worksheets/{key}/private/full"
+            .format(key=key))
 
         self.assertEqual(type(w), list)
         self.assertEqual(len(w), 1)
@@ -179,8 +179,8 @@ class TestSpreadSheet(ApiTest):
             key, "added_sheet_title")
         w = s.addWorksheet("added_sheet_title")
         self.checkPostCall(
-            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full"
-            .format(key))
+            "https://spreadsheets.google.com/feeds/worksheets/{key}/private/full"
+            .format(key=key))
 
         self.assertEqual(type(w), Worksheet)
 
@@ -189,16 +189,16 @@ class TestSpreadSheet(ApiTest):
             key, "added_sheet_title")
         title = w.getTitle()
         self.checkGetCall(
-            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full/od6"
-            .format(key))
+            "https://spreadsheets.google.com/feeds/worksheets/{key}/private/full/od6"
+            .format(key=key))
         self.assertEqual(title, "added_sheet_title")
 
         self.delete.return_value.status_code = 200
         self.delete.return_value.content = b''
         s.removeWorksheet(w)
         self.checkDeleteCall(
-            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full/od6/CCCC"
-            .format(key))
+            "https://spreadsheets.google.com/feeds/worksheets/{key}/private/full/od6/CCCC"
+            .format(key=key))
 
     def test_getWorksheets(self):
         key = "TESTKEY"
@@ -210,8 +210,8 @@ class TestSpreadSheet(ApiTest):
             key=key, sheet_names=["sheet_title"])
         w = s.getWorksheets()
         self.checkGetCall(
-            "https://spreadsheets.google.com/feeds/worksheets/{}/private/full"
-            .format(key))
+            "https://spreadsheets.google.com/feeds/worksheets/{key}/private/full"
+            .format(key=key))
 
         self.assertEqual(type(w), list)
         self.assertEqual(len(w), 1)

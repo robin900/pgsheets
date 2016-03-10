@@ -36,14 +36,14 @@ class TestClient(TestCase):
 
         expected = (
             "https://accounts.google.com/o/oauth2/auth?"
-            "scope={}&"
-            "redirect_uri={}&"
+            "scope={scope}&"
+            "redirect_uri={redirect_uri}&"
             "response_type=code&"
-            "client_id={}"
+            "client_id={client_id}"
             .format(
-                "https%3A//spreadsheets.google.com/feeds",
-                redirect_uri,
-                client_id
+                scope="https%3A//spreadsheets.google.com/feeds",
+                redirect_uri=redirect_uri,
+                client_id=client_id
                 ))
 
         self.assertEqual(c.getOauthUrl(), expected)

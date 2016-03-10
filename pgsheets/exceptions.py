@@ -13,6 +13,6 @@ class PGSheetsValueError(PGSheetsException):
 def _check_status(r):
     if r.status_code // 100 != 2:
         raise PGSheetsHTTPException(
-            "Bad HTTP response {}:\n{}"
-            .format(r.status_code, r.content.decode())
+            "Bad HTTP response {code}:\n{content}"
+            .format(code=r.status_code, content=r.content.decode())
             )

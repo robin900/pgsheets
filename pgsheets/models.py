@@ -1,13 +1,12 @@
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
-import urllib
+from six.moves.urllib import parse
 import re
 
 import requests
 import pandas as pd
 
 from pgsheets.exceptions import _check_status, PGSheetsValueError
-
 
 def _ns_w3(name):
     return '{http://www.w3.org/2005/Atom}' + name
@@ -24,7 +23,7 @@ def _get_first(elements, prop, equal):
     raise ValueError('missing element')
 
 
-class Worksheet():
+class Worksheet(object):
     """Represents a single Spreadsheet's worksheet.
 
     Do not initialize manually, instead retrieve from a Spreadsheet object.
@@ -33,7 +32,7 @@ class Worksheet():
     def __init__(self, token, element, **kwargs):
         self._element = element
         self._token = token
-        super().__init__(**kwargs)
+        super(Worksheet, self).__init__(**kwargs)
 
     def _getFeed(self):
         self_uri = _get_first(
@@ -295,11 +294,11 @@ class Worksheet():
             id_=self._getSheetKey())
 
 
-class _BaseSpreadsheet():
+class _BaseSpreadsheet(object):
     def __init__(self, token, element, **kwargs):
         self._token = token
         self._element = element
-        super().__init__(**kwargs)
+        super(_BaseSpreadsheet, self).__init__(**kwargs)
 
     def getKey(self):
         return self._element.find(_ns_w3('id')).text.split('/')[-1]
@@ -358,7 +357,7 @@ class _BaseSpreadsheet():
 
         key = self.getKey()
         url = ('https://spreadsheets.google.com/feeds/worksheets/{}'
-                   '/private/full'.format(urllib.parse.quote(key)))
+                   '/private/full'.format(parse.quote(key)))
         r = requests.post(
             url,
             data=ElementTree.tostring(entry),
@@ -402,11 +401,11 @@ class Spreadsheet(_BaseSpreadsheet):
         if m:
             key = m.group(1)
 
-        key = urllib.parse.quote(key)
+        key = parse.quote(key)
         url = ('https://spreadsheets.google.com/feeds/spreadsheets'
                '/private/full/{}'.format(key))
         r = requests.get(url, headers=token.getAuthorizationHeader())
         _check_status(r)
         element = ElementTree.fromstring(r.content.decode())
 
-        super().__init__(token=token, element=element, **kwargs)
+        super(Spreadsheet, self).__init__(token=token, element=element, **kwargs)

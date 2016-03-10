@@ -1,5 +1,9 @@
 from unittest import TestCase
-from unittest.mock import patch
+import six
+if six.PY3:
+    from unittest.mock import patch
+else:
+    from mock import patch
 import datetime
 
 from pgsheets import Client, Token

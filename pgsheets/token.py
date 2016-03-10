@@ -1,4 +1,4 @@
-import urllib.parse
+from six.moves.urllib import parse
 import json
 import datetime
 
@@ -7,7 +7,7 @@ import requests
 from pgsheets.exceptions import _check_status
 
 
-class Client():
+class Client(object):
     """Represent an application's Google's client data, along with methods for
     getting a refresh token.
 
@@ -15,7 +15,7 @@ class Client():
     """
 
     def __init__(self, client_id, client_secret, **kwargs):
-        super().__init__(**kwargs)
+        super(Client, self).__init__(**kwargs)
         self._client_id = client_id
         self._client_secret = client_secret
         self._redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
@@ -27,7 +27,7 @@ class Client():
         Provide the returned code to the getRefreshToken() method to get a
         token that can be used repeatedly in the future.
         """
-        scope = urllib.parse.quote('https://spreadsheets.google.com/feeds')
+        scope = parse.quote('https://spreadsheets.google.com/feeds')
 
         return (
             "https://accounts.google.com/o/oauth2/auth?"
@@ -68,7 +68,7 @@ class Client():
         return data['refresh_token']
 
 
-class Token():
+class Token(object):
     _REFRSH_TOKEN_SLACK = 100
 
     def __init__(self, client, refresh_token, **kwargs):
@@ -77,7 +77,7 @@ class Token():
         The refresh_token should be stored and provided on all
         initializations of any particular client and Google user.
         """
-        super().__init__(**kwargs)
+        super(Token, self).__init__(**kwargs)
         self._client = client
         self._refresh_token = refresh_token
         self._expires = None

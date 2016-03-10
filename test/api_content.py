@@ -1,4 +1,5 @@
 """Responses from Google API for use in testing"""
+from __future__ import unicode_literals
 import datetime
 
 def get_spreadsheet_element(key="test_key", title="title"):
@@ -43,7 +44,7 @@ def get_spreadsheet_element(key="test_key", title="title"):
                 update_month=d.month,
                 update_day=d.day,
                 title=title))
-    return data.encode()
+    return data.encode('utf8')
 
 def get_worksheet_entry(key, sheet_title, encode=True):
     open_tag = ("<entry>" if not encode else 

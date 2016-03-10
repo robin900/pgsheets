@@ -11,8 +11,7 @@ suited for data analysis and representing a spreadsheet.
 
 This library can be integrated easily with your existing data to present dashboards, update documents, or provide quick data analysis.
 
-The library has been tested in Python 3.4 and Python 2.7. Python 2/3 compatibility
-is achieved using the `six` module from PyPI.
+The library has been tested in Python 2.6 and 2.7, and Python 3.3 through 3.5.
 
 Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/robin900/pgsheets.svg?branch=python2-compat
+    :target: https://travis-ci.org/robin900/pgsheets/tree/python2-compat
+
 pgsheets : Manipulate Google Sheets Using Python
 ================================================
 

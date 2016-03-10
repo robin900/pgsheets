@@ -1,7 +1,6 @@
 from six.moves.urllib import parse
 import json
 import datetime
-
 import requests
 
 from pgsheets.exceptions import _check_status
@@ -131,3 +130,25 @@ class Token(object):
             headers = {}
         headers['Authorization'] = "Bearer " + self._getValidToken()
         return headers
+
+class GoogleCredentialsToken():
+
+    def __init__(self, oauth_credentials, http_object):
+        self.oauth_credentials = oauth_credentials
+        self.http = http_object
+
+    def _get_valid_token(self):
+        # new style, >=2.0.0
+        if hasattr(self, 'get_access_token'):
+            return self.get_access_token(self.http).access_token
+        # old style, <2.0.0
+        if not self.oauth_credentials.access_token or self.oauth_credentials.access_token_expired:
+            self.oauth_credentials.refresh(self.http)
+        return self.oauth_credentials.access_token
+
+    def getAuthorizationHeader(self, headers=None):
+        if headers is None:
+            headers = {}
+        headers['Authorization'] = 'Bearer {}'.format(self._get_valid_token())
+        return headers
+

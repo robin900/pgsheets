@@ -1,4 +1,5 @@
 import re
+import os
 
 from setuptools import setup, find_packages
 
@@ -9,6 +10,9 @@ if __name__ == '__main__':
         requirements = f.read()
         requirements = [
             r for r in requirements.splitlines() if r != '']
+    # exclude pandas requirement for CI testing
+    if os.environ('TRAVIS') or os.environ('CI'):
+        requirements = [ r for r in requirements if not 'pandas' in r ]
     # get readme
     with open('README.rst') as f:
         readme = f.read()
@@ -35,7 +39,10 @@ if __name__ == '__main__':
           classifiers=[
               'Development Status :: 3 - Alpha',
               'License :: OSI Approved :: MIT License',
+              'Programming Language :: Python :: 3.3',
               'Programming Language :: Python :: 3.4',
+              'Programming Language :: Python :: 3.5',
+              'Programming Language :: Python :: 2.6',
               'Programming Language :: Python :: 2.7',
               'Topic :: Scientific/Engineering',
               'Topic :: Office/Business :: Financial :: Spreadsheet',

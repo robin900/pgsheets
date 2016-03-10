@@ -1,12 +1,15 @@
 pgsheets : Manipulate Google Sheets Using Python
 ================================================
 
-pgsheets is a Python3 library for interacting with Google Sheets.
+pgsheets is a Python library for interacting with Google Sheets.
 It makes use of `Pandas <http://pandas.pydata.org/>`__ DataFrames,
 2-dimensional structures perfectly
 suited for data analysis and representing a spreadsheet.
 
 This library can be integrated easily with your existing data to present dashboards, update documents, or provide quick data analysis.
+
+The library has been tested in Python 3.4 and Python 2.7. Python 2/3 compatibility
+is achieved using the `six` module from PyPI.
 
 Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,9 +140,6 @@ with `removeWorksheet()`:
 
 Limitations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The library has only been tested in Python3.4.
-It will almost certainly not work in Python2.
 
 Currently the following cannot be done with pgsheets:
 

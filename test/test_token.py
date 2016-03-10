@@ -111,8 +111,8 @@ class TestToken(TestCase):
         self.assertEqual(pos[0], "https://www.googleapis.com/oauth2/v3/token")
         self.assertIn('data', kwargs)
         self.assertEqual(set(kwargs['data'].keys()),
-                         {'refresh_token', 'client_id', 'client_secret',
-                          'grant_type'})
+                         set(['refresh_token', 'client_id', 'client_secret',
+                          'grant_type']))
         self.assertEqual(kwargs['data']['refresh_token'], refresh_token)
         self.assertEqual(kwargs['data']['client_id'], client_id)
         self.assertEqual(kwargs['data']['client_secret'], client_secret)

@@ -17,7 +17,9 @@ if __name__ == '__main__':
     # test_requires depending on Python version
     tests_require = []
     if sys.version_info[0] == 2:
-        tests_require = ['mock', 'unittest2']
+        tests_require = ['mock']
+        if sys.version_info[1] < 7:
+            tests_require.append('unittest2')
     # get readme
     with open('README.rst') as f:
         readme = f.read()

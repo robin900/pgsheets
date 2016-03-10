@@ -11,7 +11,7 @@ if __name__ == '__main__':
         requirements = [
             r for r in requirements.splitlines() if r != '']
     # exclude pandas requirement for CI testing
-    if os.environ('TRAVIS') or os.environ('CI'):
+    if os.environ.get('TRAVIS') or os.environ.get('CI'):
         requirements = [ r for r in requirements if not 'pandas' in r ]
     # get readme
     with open('README.rst') as f:

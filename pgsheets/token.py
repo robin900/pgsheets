@@ -67,7 +67,17 @@ class Client(object):
         return data['refresh_token']
 
 
-class Token(object):
+class BaseToken(object):
+    def getAuthorizationHeader(self, headers=None):
+        """
+        :param headers: optional dict of request header to which authorization header should be added
+        :type headers: dict
+        :return: headers dict modified in place, or new dict with authorization headers
+        :rtype: dict
+        """
+        raise NotImplementedError()
+
+class Token(BaseToken):
     _REFRSH_TOKEN_SLACK = 100
 
     def __init__(self, client, refresh_token, **kwargs):
@@ -131,17 +141,29 @@ class Token(object):
         headers['Authorization'] = "Bearer " + self._getValidToken()
         return headers
 
-class GoogleCredentialsToken():
+class GoogleCredentialsToken(BaseToken):
+    """
+    Given any authorized OAuth2Credentials object created
+    with the oauth2client package, and an httplib2.Http object
+    for HTTP transport, produces a valid token object
+    usable with a pgsheets Spreadsheet.
+    """
 
-    def __init__(self, oauth_credentials, http_object):
-        self.oauth_credentials = oauth_credentials
+    def __init__(self, oauth2client_credentials, http_object):
+        """
+        :param oauth2client_credentials: authorized OAuth2Credentials object
+        :type oauth2client_credentials: oauth2client.client.OAuth2Credentials or subclass
+        :param http_object: Http object for transport
+        :type http_object: httplib2.Http
+        """
+        self.oauth_credentials = oauth2client_credentials
         self.http = http_object
 
     def _get_valid_token(self):
-        # new style, >=2.0.0
-        if hasattr(self, 'get_access_token'):
-            return self.get_access_token(self.http).access_token
-        # old style, <2.0.0
+        # new style, oauth2client>=2.0.0
+        if hasattr(self.oauth_credentials, 'get_access_token'):
+            return self.oauth_credentials.get_access_token(self.http).access_token
+        # old style, oauth2client<2.0.0
         if not self.oauth_credentials.access_token or self.oauth_credentials.access_token_expired:
             self.oauth_credentials.refresh(self.http)
         return self.oauth_credentials.access_token

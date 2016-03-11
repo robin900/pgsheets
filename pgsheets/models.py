@@ -84,6 +84,19 @@ class Worksheet():
         # title may have changed so use the latest information
         return self._getTitle(self._getFeed())
 
+    def setTitle(self, title):
+        feed = self._getFeed()
+        feed.find(_ns_w3('title')).text = title
+        edit_uri = _get_first(
+            feed.findall(_ns_w3('link')), 'rel', 'edit').get('href')
+
+        r = requests.put(
+            edit_uri,
+            data=ElementTree.tostring(feed),
+            headers=self._token.getAuthorizationHeader(
+                {'content-type': 'application/atom+xml'}))
+        _check_status(r)
+
     def _getSheetKey(self):
         return self._element.find(_ns_w3('id')).text.split('/')[-4]
 

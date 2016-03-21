@@ -6,6 +6,6 @@ __pycache__
 build
 dist
 /pgsheets.egg-info
-
+/.eggs
 # environments
 .env

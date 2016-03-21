@@ -1,10 +1,6 @@
-from unittest import TestCase
-import six
-if six.PY3:
-    from unittest.mock import patch
-else:
-    from mock import patch
 import datetime
+
+from test.compat import TestCase, patch
 
 from pgsheets import Client, Token
 from pgsheets.exceptions import PGSheetsHTTPException
@@ -40,14 +36,14 @@ class TestClient(TestCase):
 
         expected = (
             "https://accounts.google.com/o/oauth2/auth?"
-            "scope={}&"
-            "redirect_uri={}&"
+            "scope={scope}&"
+            "redirect_uri={redirect_uri}&"
             "response_type=code&"
-            "client_id={}"
+            "client_id={client_id}"
             .format(
-                "https%3A//spreadsheets.google.com/feeds",
-                redirect_uri,
-                client_id
+                scope="https%3A//spreadsheets.google.com/feeds",
+                redirect_uri=redirect_uri,
+                client_id=client_id
                 ))
 
         self.assertEqual(c.getOauthUrl(), expected)
@@ -111,8 +107,8 @@ class TestToken(TestCase):
         self.assertEqual(pos[0], "https://www.googleapis.com/oauth2/v3/token")
         self.assertIn('data', kwargs)
         self.assertEqual(set(kwargs['data'].keys()),
-                         {'refresh_token', 'client_id', 'client_secret',
-                          'grant_type'})
+                         set(['refresh_token', 'client_id', 'client_secret',
+                          'grant_type']))
         self.assertEqual(kwargs['data']['refresh_token'], refresh_token)
         self.assertEqual(kwargs['data']['client_id'], client_id)
         self.assertEqual(kwargs['data']['client_secret'], client_secret)

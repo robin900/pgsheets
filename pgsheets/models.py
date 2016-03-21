@@ -221,7 +221,7 @@ class Worksheet(object):
                 return ""
             data = str(data)
             if escape_formulae and data and data[0] == "=":
-                data = "'{}".format(data)
+                data = "'{data}".format(data=data)
             return str(data)
 
         if copy_columns:
@@ -259,7 +259,7 @@ class Worksheet(object):
             )
 
         def add_entry(feed, row, col, content):
-            code = 'R{}C{}'.format(row, col)
+            code = 'R{row}C{col}'.format(row=row, col=col)
             entry = SubElement(feed, 'entry')
             SubElement(entry, 'batch:id').text = code
             SubElement(entry, 'batch:operation', {'type': 'update'})
@@ -337,7 +337,7 @@ class _BaseSpreadsheet(object):
         for w in worksheets:
             if w._getTitle(w._element) == title:
                 return w
-        raise ValueError('unavailable sheet {}'.format(title))
+        raise ValueError('unavailable sheet {title}'.format(title=title))
 
     def addWorksheet(self, title, rows=1, cols=1):
         """Adds a new worksheet to a spreadsheet.
@@ -356,8 +356,8 @@ class _BaseSpreadsheet(object):
         SubElement(entry, 'gs:colCount').text = str(cols)
 
         key = self.getKey()
-        url = ('https://spreadsheets.google.com/feeds/worksheets/{}'
-                   '/private/full'.format(parse.quote(key)))
+        url = ('https://spreadsheets.google.com/feeds/worksheets/{key}'
+                   '/private/full'.format(key=parse.quote(key)))
         r = requests.post(
             url,
             data=ElementTree.tostring(entry),
@@ -403,7 +403,7 @@ class Spreadsheet(_BaseSpreadsheet):
 
         key = parse.quote(key)
         url = ('https://spreadsheets.google.com/feeds/spreadsheets'
-               '/private/full/{}'.format(key))
+               '/private/full/{key}'.format(key=key))
         r = requests.get(url, headers=token.getAuthorizationHeader())
         _check_status(r)
         element = ElementTree.fromstring(r.content.decode())

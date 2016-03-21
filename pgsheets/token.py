@@ -66,7 +66,6 @@ class Client(object):
         data = json.loads(r.content.decode())
         return data['refresh_token']
 
-
 class BaseToken(object):
     def getAuthorizationHeader(self, headers=None):
         """

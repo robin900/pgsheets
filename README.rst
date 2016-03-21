@@ -42,7 +42,7 @@ If you haven't already you will need to create a project in Google's Developer C
 #. Now click on *credentials*.
 #. Click *Create new Client ID* and select *Installed Application* > *Other*
 
-Getting a Token
+Authentication #1: Getting a Token Using Client ID and Client Secret
 ----------------------------
 
 Using your Google *client id* and *client secret* we can get a
@@ -67,6 +67,28 @@ an access code is returned, which we use to get a token:
     >>> t = Token(c, my_token)
 
 You need to save *my_token* for future use.
+
+Authentication #2: Using Credentials from Google API Python Client
+----------------------------
+
+If you prefer to use the `google-api-python-client <https://developers.google.com/api-client-library/python/>` 
+package to build Google API credentials with the `oauth2client` module, you can employ those credentials
+with pgsheets.  See the 
+`authentication overview <https://developers.google.com/api-client-library/python/guide/aaa_overview>`
+for assistance. An example below:
+
+.. code-block:: python
+
+    >>> from oauth2client.client import SignedJwtAssertionCredentials
+    >>> from httplib2 import Http
+    >>> import pgsheets
+    >>> credentials = SignedJwtAssertionCredentials(
+    ...     MY_CLIENT_EMAIL,
+    ...     MY_PRIVATE_KEY_BYTES,
+    ...     ['https://spreadsheets.google.com/feeds']
+    ...     )
+    >>> token = pgsheets.GoogleCredentialsToken(credentials, Http())
+    >>> s = pgsheets.Spreadsheet(token, my_url)
 
 Editing a spreadsheet
 -------------------------------------------
